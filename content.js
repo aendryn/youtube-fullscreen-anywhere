@@ -4,6 +4,17 @@ The native Fullscreen API always targets the monitor, so we just pin YouTube's p
 
 const style = document.createElement("style");
 style.textContent = `
+  /* Hide everything, then re-reveal the player subtree. z-index alone isn't
+     enough because YouTube's masthead/sidebar/chat sit in their own stacking
+     contexts (transforms, sticky), so it can't out-rank them; visibility can
+     be overridden by descendants even when an ancestor sets it hidden. */
+  html.ytwin-active body * {
+    visibility: hidden !important;
+  }
+  html.ytwin-active #movie_player,
+  html.ytwin-active #movie_player * {
+    visibility: visible !important;
+  }
   html.ytwin-active #movie_player {
     position: fixed !important;
     inset: 0 !important;
